@@ -23,8 +23,10 @@ export default async function BlogPage() {
       {posts.length > 0 ? (
         <ul>
           {posts.map((post) => {
+            if (!post || !post._sys) return null;
+
             // Derive slug from _sys.filename
-            const slug = post._sys?.filename;
+            const slug = post._sys.filename;
 
             return (
               slug && (
