@@ -7,6 +7,7 @@ interface BlogPostProps {
     slug: string;
   };
 }
+
 export default async function BlogPage() {
   const postsResponse = await client.queries.postConnection();
 
@@ -22,8 +23,8 @@ export default async function BlogPage() {
       {posts.length > 0 ? (
         <ul>
           {posts.map((post) => {
-            // Derive slug from another property if needed, e.g., _sys.filename
-            const slug = post.slug || post._sys?.filename;
+            // Derive slug from _sys.filename
+            const slug = post._sys?.filename;
 
             return (
               slug && (
