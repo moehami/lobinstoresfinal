@@ -23,10 +23,17 @@ export async function generateMetadata({ params }: BlogPostProps): Promise<Metad
 }
 
 export default async function BlogPost({ params }: BlogPostProps) {
-  const { data } = await useTina({
-    query: client.queries.post,
-    variables: { relativePath: `${params.slug}.mdx` },
-  });
+  // Fetch data directly with the client.
+  const result = await client.queries.post({ relativePath: `${params.slug}.mdx` });
+
+  // Pass all required properties to `useTina`.
+  const tinaProps = {
+    query: result.query,
+    variables: result.variables,
+    data: result.data, // Include the required `data` property.
+  };
+
+  const { data } = useTina(tinaProps);
 
   const { title, date, author, body } = data.post;
 
