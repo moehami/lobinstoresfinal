@@ -7,7 +7,13 @@ interface BlogPostProps {
     slug: string;
   };
 }
-
+export async function generateStaticParams() {
+  // Logic to generate static paths
+  return [
+    { params: { slug: 'example-slug' } },
+    // Add more dynamic paths as needed
+  ];
+}
 export async function generateMetadata({ params }: BlogPostProps): Promise<Metadata> {
   const post = await client.queries.post({ relativePath: `${params.slug}.mdx` });
   
