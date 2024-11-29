@@ -5,13 +5,28 @@ import { MapPin, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 
+// Add this function to generate static params
+export function generateStaticParams() {
+  // Replace this with your actual list of states
+  // For example, if you have a predefined list of states
+  const states = [
+    'california', 
+    'texas', 
+    'new-york', 
+    // Add all the states you want to pre-render
+  ];
+
+  return states.map((state) => ({
+    state: state
+  }));
+}
+
 interface StatePageContentProps {
   params: {
     state: string;
   };
 }
 
-// Change to a default export
 export default function StatePageContent({ params }: StatePageContentProps) {
   const state = params.state;
   const stateFormatted = state
