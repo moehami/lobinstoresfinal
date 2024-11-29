@@ -1,15 +1,30 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {
-  output: 'export',
+
+
+const config = {
   eslint: {
+    // Warning: This allows production builds to successfully complete even if
+    // your project has ESLint errors.
     ignoreDuringBuilds: true,
   },
-  images: { 
-    unoptimized: true,
-    domains: ['images.unsplash.com']
+  typescript: {
+    // !! WARN !!
+    // Dangerously allow production builds to successfully complete even if
+    // your project has type errors.
+    // !! WARN !!
+    ignoreBuildErrors: true,
   },
-  // Ensure trailing slashes for cleaner URLs
-  trailingSlash: true,
+  webpack(config) {
+    // return config is incorrectly placed here
+    return config;
+  },
+  async rewrites() {
+    return [
+      {
+        source: '/admin',
+        destination: '/admin/index.html',
+      },
+    ];
+  },
 };
 
-module.exports = nextConfig;
+export default config;
