@@ -6,6 +6,25 @@ import { Button } from "@/components/ui/button";
 import { MapPin, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 
+// List of all US states for static generation
+const states = [
+  "alabama", "alaska", "arizona", "arkansas", "california", "colorado", "connecticut",
+  "delaware", "florida", "georgia", "hawaii", "idaho", "illinois", "indiana", "iowa",
+  "kansas", "kentucky", "louisiana", "maine", "maryland", "massachusetts", "michigan",
+  "minnesota", "mississippi", "missouri", "montana", "nebraska", "nevada", "new-hampshire",
+  "new-jersey", "new-mexico", "new-york", "north-carolina", "north-dakota", "ohio",
+  "oklahoma", "oregon", "pennsylvania", "rhode-island", "south-carolina", "south-dakota",
+  "tennessee", "texas", "utah", "vermont", "virginia", "washington", "west-virginia",
+  "wisconsin", "wyoming"
+];
+
+// This function is required for static site generation
+export async function generateStaticParams() {
+  return states.map((state) => ({
+    state: state,
+  }));
+}
+
 export default function StatePage() {
   const { state } = useParams();
   const stateFormatted = (state as string)
