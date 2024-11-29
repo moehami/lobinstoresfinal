@@ -1,5 +1,4 @@
 "use client";
-
 import { Store } from "@/components/stores/store-card";
 import { Button } from "@/components/ui/button";
 import { MapPin, ArrowLeft } from "lucide-react";
@@ -7,10 +6,14 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 
 interface StatePageContentProps {
-  state: string;
+  params: {
+    state: string;
+  };
 }
 
-export function StatePageContent({ state }: StatePageContentProps) {
+// Change to a default export
+export default function StatePageContent({ params }: StatePageContentProps) {
+  const state = params.state;
   const stateFormatted = state
     .split("-")
     .map(word => word.charAt(0).toUpperCase() + word.slice(1))
@@ -40,7 +43,6 @@ export function StatePageContent({ state }: StatePageContentProps) {
           </p>
         </div>
       </motion.div>
-
       <motion.div 
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
