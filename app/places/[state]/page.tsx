@@ -1,47 +1,74 @@
-"use client";
-import { Store } from "@/components/stores/store-card";
-import { Button } from "@/components/ui/button";
+import { Metadata } from 'next';
 import { MapPin, ArrowLeft } from "lucide-react";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Store } from "@/components/stores/store-card";
 import { motion } from "framer-motion";
 
-// Add this function to generate static params
-export function generateStaticParams() {
-  // Replace this with your actual list of states
-  // For example, if you have a predefined list of states
+// Mock data service - replace with your actual data fetching logic
+async function getStoresForState(state: string) {
+  // TODO: Replace with actual API call or database query
+  const mockStores = [
+    {
+      name: `${state.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')} Bin Store`,
+      location: state.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' '),
+      rating: 4.5,
+      image: "https://images.unsplash.com/photo-1604719312566-8912e9227c6a?ixlib=rb-4.0.3",
+      tags: ["Wholesale", "Electronics"]
+    }
+    // Add more stores or fetch from an actual source
+  ];
+  return mockStores;
+}
+
+// Static params generation
+export async function generateStaticParams() {
+  // TODO: Replace with actual state list from your data source
   const states = [
     'california', 
     'texas', 
-    'new-york', 
-    // Add all the states you want to pre-render
+    'new-york',
+    'florida',
+    'illinois'
   ];
 
-  return states.map((state) => ({
-    state: state
-  }));
+  return states.map((state) => ({ state }));
 }
 
-interface StatePageContentProps {
-  params: {
-    state: string;
+// Metadata generation
+export async function generateMetadata({ 
+  params 
+}: { 
+  params: { state: string } 
+}): Promise<Metadata> {
+  const stateFormatted = params.state
+    .split("-")
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
+
+  return {
+    title: `Bin Stores in ${stateFormatted}`,
+    description: `Find the best bin stores and liquidation centers in ${stateFormatted}`
   };
 }
 
-export default function StatePageContent({ params }: StatePageContentProps) {
+export default async function StatePageContent({ 
+  params 
+}: { 
+  params: { state: string } 
+}) {
   const state = params.state;
   const stateFormatted = state
     .split("-")
     .map(word => word.charAt(0).toUpperCase() + word.slice(1))
     .join(" ");
 
+  // Fetch stores for the specific state
+  const stores = await getStoresForState(state);
+
   return (
     <div className="container mx-auto px-4 py-12">
-      <motion.div 
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="flex items-center gap-4 mb-8"
-      >
+      <div className="flex items-center gap-4 mb-8">
         <Link href="/">
           <Button variant="ghost" size="sm">
             <ArrowLeft className="h-4 w-4 mr-2" />
@@ -57,21 +84,35 @@ export default function StatePageContent({ params }: StatePageContentProps) {
             Find the best bin stores and liquidation centers in {stateFormatted}
           </p>
         </div>
-      </motion.div>
-      <motion.div 
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.5, delay: 0.2 }}
-        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-      >
-        <Store
-          name="Sample Bin Store"
-          location={`${stateFormatted}`}
-          rating={4.5}
-          image="https://images.unsplash.com/photo-1604719312566-8912e9227c6a?ixlib=rb-4.0.3"
-          tags={["Wholesale", "Electronics"]}
-        />
-      </motion.div>
+      </div>
+      
+      {stores.length > 0 ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {stores.map((store, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ 
+                duration: 0.5, 
+                delay: index * 0.1 
+              }}
+            >
+              <Store
+                name={store.name}
+                location={store.location}
+                rating={store.rating}
+                image={store.image}
+                tags={store.tags}
+              />
+            </motion.div>
+          ))}
+        </div>
+      ) : (
+        <div className="text-center text-muted-foreground py-12">
+          No stores found in {stateFormatted}
+        </div>
+      )}
     </div>
   );
 }
