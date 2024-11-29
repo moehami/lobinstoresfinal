@@ -1,33 +1,16 @@
 "use client";
 
-import { useParams } from "next/navigation";
 import { Store } from "@/components/stores/store-card";
 import { Button } from "@/components/ui/button";
 import { MapPin, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 
-// List of all US states for static generation
-const states = [
-  "alabama", "alaska", "arizona", "arkansas", "california", "colorado", "connecticut",
-  "delaware", "florida", "georgia", "hawaii", "idaho", "illinois", "indiana", "iowa",
-  "kansas", "kentucky", "louisiana", "maine", "maryland", "massachusetts", "michigan",
-  "minnesota", "mississippi", "missouri", "montana", "nebraska", "nevada", "new-hampshire",
-  "new-jersey", "new-mexico", "new-york", "north-carolina", "north-dakota", "ohio",
-  "oklahoma", "oregon", "pennsylvania", "rhode-island", "south-carolina", "south-dakota",
-  "tennessee", "texas", "utah", "vermont", "virginia", "washington", "west-virginia",
-  "wisconsin", "wyoming"
-];
-
-// This function is required for static site generation
-export async function generateStaticParams() {
-  return states.map((state) => ({
-    state: state,
-  }));
+interface StatePageContentProps {
+  state: string;
 }
 
-export default function StatePage() {
-  const { state } = useParams();
-  const stateFormatted = (state as string)
+export function StatePageContent({ state }: StatePageContentProps) {
+  const stateFormatted = state
     .split("-")
     .map(word => word.charAt(0).toUpperCase() + word.slice(1))
     .join(" ");
@@ -53,7 +36,6 @@ export default function StatePage() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {/* Placeholder stores - will be replaced with actual state data */}
         <Store
           name="Sample Bin Store"
           location={`${stateFormatted}`}
