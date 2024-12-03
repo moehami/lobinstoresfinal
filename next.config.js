@@ -1,5 +1,3 @@
-
-
 const config = {
   eslint: {
     // Warning: This allows production builds to successfully complete even if
@@ -26,5 +24,4 @@ const config = {
     ];
   },
 };
-
-export default config;
+module.exports = config
